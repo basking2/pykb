@@ -1,5 +1,6 @@
 from django.conf.urls import url, include
 
+from django.contrib.auth import views as auth_views
 import oauth2_provider.views as oauth2_views
 from django.conf import settings
 from . import views
@@ -30,7 +31,9 @@ if settings.DEBUG:
     ]
 
 urlpatterns = [
+    url(r'^accounts/login/$', auth_views.LoginView.as_view(), name='login'),
     url(r'^o/', include(oauth2_endpoint_views, namespace="oauth2_provider")),
+    url(r'^secret$', views.secret_page, name='secret'),
     url(r'^$', views.index, name='index'),
     url(r'^secured', ApiEndpoint.as_view())
 ]
