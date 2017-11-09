@@ -8,13 +8,14 @@ from django.template.loader import get_template
 
 from django.utils.http import urlencode
 import json
+import requests
 
-client_secret = json.loads(open('client_secret.json').read())
+client_json = json.loads(open('client_secret.json').read())
 
 def index(request):
     t = get_template('index.html')
-    client_id = client_secret['web']['client_id']
-    auth_uri = client_secret['web']['auth_uri']
+    client_id = client_json['web']['client_id']
+    auth_uri = client_json['web']['auth_uri']
     q = urlencode({
         'scope': ' '.join(['profile', 'email', 'openid']),
         'client_id': client_id,
@@ -24,6 +25,7 @@ def index(request):
         'redirect_uri': 'http://localhost:8000/oauth2',
         'response_type': 'code',
         })
+
     gauth = auth_uri + "?" + q
 
     h = t.render({
@@ -43,6 +45,36 @@ def oauth2(request):
     s += str(request.session)+"\n"
     for k in request.GET:
         s += k +" = "+request.GET[k]+"\n"
+
+    scope = ''
+    for k in request.GET['scope'].split(' '):
+        if (k.endswith('plus.me')):
+            scope = k
+
+    client_id = client_json['web']['client_id']
+    client_secret = client_json['web']['client_secret']
+
+    token_uri = client_json['web']['token_uri']
+
+    options = {
+        'client_id': client_id,
+        'client_secret': client_secret,
+        'grant_type': 'authorization_code',
+        'code': request.GET['code'],
+        'redirect_uri': 'http://localhost:8000/oauth2',
+    }
+
+    resp = requests.post(token_uri, options)
+
+    token_json = resp.json()
+
+    # access_token
+    # expires_in
+    # token_type
+    # id_token
+
+    s += "\n\nSCOPE "+scope +"\n"
+    s += "\n\n"+str(token_json)+"\n\n"
     return HttpResponse(s, content_type="text/plain", status=200)
 
 @login_required()
