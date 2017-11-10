@@ -31,9 +31,14 @@ def index(request):
 
     gauth = auth_uri + "?" + q
 
-    login_val = str(request.session['oauth_login_token']) + \
-    "\n\n" + \
-     str(request.session['oauth_id_token'])
+    login_val = 'nothing'
+
+    if 'oauth_login_token' in request.session:
+        login_val = str(request.session['oauth_login_token']) + \
+        "\n\n" 
+
+    if 'oauth_id_token' in request.session:
+        login_val += str(request.session['oauth_id_token'])
 
     h = t.render({
         "var": "val",
