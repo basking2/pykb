@@ -122,8 +122,7 @@ def oauth2(request):
     try:
         user = User.objects.get(email=id_token['email'])
     except User.DoesNotExist as e:
-        # FIXME - set unusable password on user.
-        user = User.objects.create_user(id_token['email'], id_token['email'], token_json['access_token'])
+        user = User.objects.create_user(id_token['email'], id_token['email'])
         user.save()
 
     login(request, user)
