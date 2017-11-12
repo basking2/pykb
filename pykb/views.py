@@ -1,11 +1,13 @@
 from django.shortcuts import render
 
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 
 from django.http import HttpResponse
 from django.template.loader import get_template
-
+from django.urls import reverse
+from django.shortcuts import redirect
 from django.utils.http import urlencode
 import json
 import requests
@@ -35,7 +37,7 @@ def index(request):
 
     if 'oauth_login_token' in request.session:
         login_val = str(request.session['oauth_login_token']) + \
-        "\n\n" 
+        "\n\n"
 
     if 'oauth_id_token' in request.session:
         login_val += str(request.session['oauth_id_token'])
@@ -115,6 +117,11 @@ def oauth2(request):
     s += "\n\n"+str(token_json)+"\n\n"
     s += "\n\n"+str(id_token)+"\n\n"
     return HttpResponse(s, content_type="text/plain", status=200)
+
+def logout_view(request):
+    logout(request)
+    # Return an HttpResponseRedirect.
+    return redirect(reverse('index'))
 
 @login_required()
 def secret_page(request, *args, **kwargs):
