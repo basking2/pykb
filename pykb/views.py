@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
-
+from django.contrib.auth import login
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.urls import reverse
@@ -12,6 +12,8 @@ from django.utils.http import urlencode
 import json
 import requests
 from jose import jwt
+
+from django.contrib.auth.models import User
 
 client_json = json.loads(open('client_secret.json').read())
 
@@ -85,6 +87,16 @@ def oauth2(request):
     # We got the web token!
     token_json = resp.json()
 
+    if 'error' in token_json:
+        msg = token_json['error_description']
+        err = token_json['error']
+        t = get_template('oauth2_error.html')
+        html = t.render({
+            'msg': msg,
+            'err': err,
+        })
+        return HttpResponse(html, status=400)
+
     # Get the Google Certificates.
     certs = requests.get(client_json['web']['auth_provider_x509_cert_url']).json()
 
@@ -104,19 +116,25 @@ def oauth2(request):
         access_token=token_json['access_token']
     )
 
-
     request.session['oauth_login_token'] = token_json
     request.session['oauth_id_token'] = id_token
 
-    # access_token
-    # expires_in
-    # token_type
-    # id_token
+    try:
+        user = User.objects.get(email=id_token['email'])
+    except User.DoesNotExist as e:
+        # FIXME - set unusable password on user.
+        user = User.objects.create_user(id_token['email'], id_token['email'], token_json['access_token'])
+        user.save()
 
-    s += "\n\nSCOPE "+scope +"\n"
-    s += "\n\n"+str(token_json)+"\n\n"
-    s += "\n\n"+str(id_token)+"\n\n"
-    return HttpResponse(s, content_type="text/plain", status=200)
+    login(request, user)
+
+    t = get_template("oauth2.html")
+    html = t.render({
+        'scope': scope,
+        'token_json': str(token_json),
+        'id_token': str(id_token),
+    })
+    return HttpResponse(html, status=200)
 
 def logout_view(request):
     logout(request)
