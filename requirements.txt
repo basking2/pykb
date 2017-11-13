@@ -1,4 +1,4 @@
 django
 nose
-python-jose
+python-jose-cryptodome
 requests
