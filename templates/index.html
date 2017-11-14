@@ -1,6 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 Hullo, world.
 
+{% load static %}
+
 <ol>
+  <li><a href="{% static "style.css"%}">Style Sheet</a></li>
   <li> Auth'd - {{ auth }}</li>
   <li> <a href="{{gauth}}">Google Auth</a></li>
   <li><a href="secret">secret</a></li>
@@ -10,3 +17,5 @@ Hullo, world.
   Login
   {{login}}
 </code>
+
+{% endblock %}
