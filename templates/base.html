@@ -1,8 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "style.css" %}" />
   </head>
   <body>
+
+    <div id="user">
+      <ol>
+        <li> <a href="{% url "login" %}">Login</a></li>
+        <li> <a href="{% url "logout" %}">Logout</a></li>
+        <li><a href="secret">secret</a></li>
+      </ol>
+    </div>
+
     {% block content %}
     {% endblock %}
   </body>

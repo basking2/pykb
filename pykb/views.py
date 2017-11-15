@@ -140,6 +140,26 @@ def logout_view(request):
     # Return an HttpResponseRedirect.
     return redirect(reverse('index'))
 
+def login_view(request):
+    t = get_template('login.html')
+    client_id = client_json['web']['client_id']
+    auth_uri = client_json['web']['auth_uri']
+    q = urlencode({
+        'scope': ' '.join(['profile', 'email', 'openid']),
+        'client_id': client_id,
+        'access_type': 'offline',
+        'include_granted_scopes': 'true',
+        'state': anti_forgery_token,
+        'redirect_uri': 'http://localhost:8000/oauth2',
+        'response_type': 'code',
+        })
+
+    gauth = auth_uri + "?" + q
+    html = t.render({
+        'gauth': gauth,
+    })
+    return HttpResponse(html)
+
 @login_required()
 def secret_page(request, *args, **kwargs):
     return HttpResponse('Secret contents!', status=200)
