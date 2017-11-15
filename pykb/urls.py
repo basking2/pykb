@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^oauth2$', views.oauth2, name='oauth2'),
     url(r'^login$', views.login_view, name='login'),
     url(r'^logout$', views.logout_view, name='logout'),
-    url(r'^$', views.index, name='index'),
+    url(r'^lo$', views.UserView.as_view(), name='lo'),
+    url(r'^$', views.UserView.as_view(), name='index'),
 ]

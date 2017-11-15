@@ -22,47 +22,22 @@ client_json = json.loads(open('client_secret.json').read())
 anti_forgery_token = "some random value - fix me."
 
 class UserView(TemplateView):
-    ''' in progress '''
     def get_context_data(self, **kwargs):
         context = super(UserView, self).get_context_data(**kwargs)
         context['is_authenticated'] = self.request.user.is_authenticated()
-        # context['oauth_login_token'] = request.session['oauth_login_token']
-        # context['oauth_id_token'] = request.session['oauth_id_token']
+        if 'oauth_login_token' in self.request.session:
+            context['oauth_login_token'] = self.request.session['oauth_login_token']
+        if 'oauth_id_token' in self.request.session:
+            context['oauth_id_token'] = self.request.session['oauth_id_token']
         return context
 
-def index(request):
-    t = get_template('index.html')
-    client_id = client_json['web']['client_id']
-    auth_uri = client_json['web']['auth_uri']
-    q = urlencode({
-        'scope': ' '.join(['profile', 'email', 'openid']),
-        'client_id': client_id,
-        'access_type': 'offline',
-        'include_granted_scopes': 'true',
-        'state': anti_forgery_token,
-        'redirect_uri': 'http://localhost:8000/oauth2',
-        'response_type': 'code',
-        })
-
-    gauth = auth_uri + "?" + q
-
-    login_val = 'nothing'
-
-    if 'oauth_login_token' in request.session:
-        login_val = str(request.session['oauth_login_token']) + \
-        "\n\n"
-
-    if 'oauth_id_token' in request.session:
-        login_val += str(request.session['oauth_id_token'])
-
-    h = t.render({
-        "var": "val",
-        "auth": request.user.is_authenticated(),
-        "gauth": gauth,
-        'login': login_val,
-    })
-
-    return HttpResponse(h)
+    def get_template_names(self):
+        t = self.request.path.split('/')[-1]
+        if t == '':
+            t = 'index.html'
+        else:
+            t = t + ".html"
+        return [t]
 
 def oauth2(request):
     '''

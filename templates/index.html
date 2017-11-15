@@ -8,14 +8,17 @@ Hullo, world.
 
 <ol>
   <li><a href="{% static "style.css"%}">Style Sheet</a></li>
-  <li> Auth'd - {{ auth }}</li>
+  <li> Auth'd - {{ is_authenticated }}</li>
   <li> <a href="{{gauth}}">Google Auth</a></li>
   <li><a href="secret">secret</a></li>
 </ol>
 
 <code>
-  Login
-  {{login}}
+  {{oauth_login_token}}
+</code>
+<hr />
+<code>
+  {{oauth_id_token}}
 </code>
 
 {% endblock %}
