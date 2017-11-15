@@ -9,15 +9,26 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.utils.http import urlencode
+from django.views.generic.base import TemplateView
 import json
 import requests
 from jose import jwt
+
 
 from django.contrib.auth.models import User
 
 client_json = json.loads(open('client_secret.json').read())
 
 anti_forgery_token = "some random value - fix me."
+
+class UserView(TemplateView):
+    ''' in progress '''
+    def get_context_data(self, **kwargs):
+        context = super(UserView, self).get_context_data(**kwargs)
+        context['is_authenticated'] = self.request.user.is_authenticated()
+        # context['oauth_login_token'] = request.session['oauth_login_token']
+        # context['oauth_id_token'] = request.session['oauth_id_token']
+        return context
 
 def index(request):
     t = get_template('index.html')
