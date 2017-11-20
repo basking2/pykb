@@ -1,0 +1,4 @@
+falcon
+requests
+python-jose-cryptodome
+gunicorn
