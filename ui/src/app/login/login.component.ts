@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
       this.login_uri = this.auth_uri +
         "?scope=profile email openid&client_id="+this.client_id +
         "&access_type=offline&include_granted_scopes=true&state="+this.anti_forgery_token +
-        "&redirect_uri=http://localhost:8000/oauth2&response_type=code"
+        "&redirect_uri=http://localhost:8000/login&response_type=code"
         ;
 
 
