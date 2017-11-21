@@ -1,8 +1,12 @@
 {
+	"/oauth2/*": {
+		"target": "http://localhost:8001/",
+		"secure": false
+	},
 	"/api": {
-		"target": "http://www.google.com/",
+		"target": "http://localhost:8001/",
 		"secure": false,
-		"pathRewrite": {
+		"pathRewrite_disabled": {
 			"^/api": ""
 		}
 	}
