@@ -10,12 +10,10 @@ import { HttpUrlEncodingCodec } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit {
 
-  client_id: string = "";
-  project_id: string = "";
-  auth_uri: string = "";
-  token_uri: string = "";
-  anti_forgery_token: string = "test - fixme - replace this.";
+  // Report any errors regarding login operations.
+  error: string = undefined;
 
+  // Built from a call to /oauth2/client.
   login_uri: string = "";
 
   constructor(
@@ -24,37 +22,30 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Make the HTTP request:
-    this.http.get('/oauth2/client').subscribe(data => {
-      // Read the result field from the JSON response.
-      this.client_id = data['client_id'];
-      this.project_id = data['project_id'];
-      this.auth_uri = data['auth_uri'];
-      this.token_uri = data['token_uri'];
 
-      this.login_uri = this.auth_uri +
-        "?scope=profile email openid&client_id="+this.client_id +
-        "&access_type=offline&include_granted_scopes=true&state="+this.anti_forgery_token +
-        "&redirect_uri=http://localhost:8000/login&response_type=code"
-        ;
-
-
-      this.http.get(
-        data['auth_uri'],
-        {
-          "params": {
-            'scope': 'profile email openid',
-            'client_id': this.client_id,
-            'access_type': 'offline',
-            'include_granted_scopes': 'true',
-            'state': this.anti_forgery_token,
-            'redirect_uri': 'http://localhost:8000/login',
-            'response_type': 'code',
-          }
+    // If there is a code parameter, the user is trying to validate a token.
+    if (location.search.indexOf('code=') >= 0) {
+      this.http.get('/oauth2/validate' + location.search).subscribe(data =>{
+        if (data['token']) {
+          localStorage.setItem('bearer', data['token'])
         }
-      ).subscribe(data => {
-      });
-    });
-  }
+        else {
+          this.error = data['error']
+        }
+        this.location.go('/login')
+      })
+    }
+    else {
+      // Make the HTTP request:
+      this.http.get('/oauth2/client').subscribe(data => {
 
+        // Read the result field from the JSON response.
+        this.login_uri = data['auth_uri'] +
+          "?scope=profile email openid&client_id="+data['client_id'] +
+          "&access_type=offline&include_granted_scopes=true&state="+data['state'] +
+          "&redirect_uri=http://localhost:8000/login&response_type=code"
+          ;
+      });
+    }
+  }
 }
