@@ -4,21 +4,15 @@ import sqlalchemy
 print("SQLALCHEMY VERSION "+sqlalchemy.__version__)
 
 from sqlalchemy import create_engine
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
+# from sqlalchemy import Column
+# from sqlalchemy import Integer
+# from sqlalchemy import String
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-Base = declarative_base()
 
-# Make a user object.
-class User(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    fullname = Column(String)
-    password = Column(String)
+Base = declarative_base()
+from pykbdb.user import User
 
 # Create an engine everyone can use.
 engine = create_engine('sqlite:///db.sqlite3', echo=True)
