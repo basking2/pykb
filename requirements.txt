@@ -1,4 +1,5 @@
 falcon
 requests
 python-jose-cryptodome
+SQLAlchemy
 gunicorn
