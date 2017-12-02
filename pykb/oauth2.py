@@ -4,6 +4,8 @@ import json
 import requests
 from jose import jwt
 
+import datetime
+
 import pykbdb
 
 class OAuth2:
@@ -33,8 +35,18 @@ class OAuth2:
 
                 if success:
                     resp.body = json.dumps({'token': token})
+
+                    # When the user logs in, save the session.
                     session = pykbdb.Session()
-                    session.add(pykbdb.WebSession(username="username", authorization = token))
+                    session.add(
+                        pykbdb.WebSession(
+                            user_name="username",
+                            authorization = token,
+                            expiration = datetime.datetime.now() + datetime.timedelta(seconds = 60 * 60)))
+                    # Prune old sessions from the user.
+                    session.query(pykbdb.WebSession).filter(pykbdb.WebSession.expiration < datetime.datetime.now()).delete()
+                    session.commit()
+
                 else:
                     resp.body = json.dumps({'error': token})
 

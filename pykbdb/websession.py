@@ -12,12 +12,6 @@ from pykbdb import Base
 # Make a user object.
 class WebSession(Base):
     __tablename__ = 'sessions'
-    username = Column(String, primary_key=True)
-    authorization = Column(String, unique=True)
+    authorization = Column(String, primary_key=True)
+    user_name = Column(String, index=True)
     expiration = Column(DateTime)
-
-    def setpw(password):
-        self.passwordhash = bcrypt.hashpw(password, bcrypt.gensalt())
-
-    def checkpw(password):
-        return bcrypt.checkpw(password, self.passwordhash)
