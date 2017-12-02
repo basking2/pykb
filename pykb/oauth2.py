@@ -4,12 +4,14 @@ import json
 import requests
 from jose import jwt
 
+import pykbdb
+
 class OAuth2:
     def __init__(self, **kwargs):
         if 'settings' in kwargs:
             self.settings = kwargs['settings']
 
-        self.state = "FIXME - this should be random."
+        self.state = "FIXME-this_should_be_random."
 
     def on_get(self, req, resp, action):
         resp.status = falcon.HTTP_200
@@ -23,14 +25,18 @@ class OAuth2:
             else:
                 state = 'no state provided'
 
-            # FIXME - validate state.
+            if state != self.state:
+                resp.body = json.dumps({"error": "State does not match: %s"%(state)})
 
-            (token, success) = self.validate_code(code, self.settings.client_secret)
-
-            if success:
-                resp.body = json.dumps({'token': token})
             else:
-                resp.body = json.dumps({'error': token})
+                (token, success) = self.validate_code(code, self.settings.client_secret)
+
+                if success:
+                    resp.body = json.dumps({'token': token})
+                    session = pykbdb.Session()
+                    session.add(pykbdb.WebSession(username="username", authorization = token))
+                else:
+                    resp.body = json.dumps({'error': token})
 
         else:
             # By default, return the client parameters to make an auth call.

@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 from pykbdb.user import User
+from pykbdb.websession import WebSession
 
 # Create an engine everyone can use.
 engine = create_engine('sqlite:///db.sqlite3', echo=True)
@@ -23,7 +24,7 @@ Base.metadata.create_all(engine)
 # How do we make sessions?
 Session = sessionmaker(bind=engine)
 
-session = Session()
-session.add(User(name='hi'))
-print(session.query(User).filter_by(name='ed').first())
-session.close()
+# session = Session()
+# session.add(User(name='hi'))
+# print(session.query(User).filter_by(name='ed').first())
+# session.close()
