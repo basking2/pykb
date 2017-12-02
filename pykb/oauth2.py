@@ -38,12 +38,13 @@ class OAuth2:
 
                     # When the user logs in, save the session.
                     session = pykbdb.Session()
+                    # Set the new session to expire after a time.
                     session.add(
                         pykbdb.WebSession(
                             user_name="username",
                             authorization = token,
                             expiration = datetime.datetime.now() + datetime.timedelta(seconds = 60 * 60)))
-                    # Prune old sessions from the user.
+                    # Remove sessions older than their expiration.
                     session.query(pykbdb.WebSession).filter(pykbdb.WebSession.expiration < datetime.datetime.now()).delete()
                     session.commit()
 
