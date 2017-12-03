@@ -9,6 +9,11 @@ class Blobs():
             self.settings = kwargs['settings']
 
     def on_get(self, req, resp):
+        print("IN GET BLOBS")
+        if 'Authorization' in req.headers:
+            print("AUTHRIZATION: "+req.headers['Authorization'])
+
+
         resp.status = falcon.HTTP_200
         resp.content_type = 'application/json'
         resp.body = json.dumps({ "text": "OK" })
