@@ -106,30 +106,3 @@ class OAuth2:
                 access_token=token_json['access_token'])
 
             return (token_json['access_token'], True)
-
-    @staticmethod
-    def validate_session(req):
-        '''
-        Valdiate sessions stored in the Authorization header.
-
-        This returns (string, False) on an error.
-        This returns (token, True) on success.
-        '''
-        authorization = req.get_header('Authorization', False, '')
-        m = re.compile('^\s*bearer\s+(.*)$', re.IGNORECASE).match(authorization)
-        if m:
-            session = pykbdb.Session()
-            websessions = session.query(pykbdb.WebSession).filter(pykbdb.WebSession.authorization == m[1])
-            if websessions.count() > 0:
-                now = datetime.datetime.now()
-                if websessions[0].expiration < now:
-                    session.query(pykbdb.WebSession).filter(pykbdb.WebSession.expiration < now).delete()
-                    session.commit()
-                    session.close()
-                    return ("Expired session.", False)
-                else:
-                    session.close()
-                    return ('', True)
-            else:
-                session.close()
-                return ("Session not found.", False)
