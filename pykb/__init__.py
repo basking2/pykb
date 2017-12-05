@@ -16,5 +16,5 @@ print(pykbdb.engine)
 
 app.add_route('/pykb', PyKb(settings = settings))
 app.add_route('/oauth2/{action}', OAuth2(settings = settings))
-app.add_route('/blobs', Blobs(settings = settings))
-app.add_route('/blobs/{id}', Blobs(settings = settings))
+app.add_route('/api/blob', Blobs(settings = settings))
+app.add_route('/api/blob/{id}', Blobs(settings = settings))

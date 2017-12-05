@@ -3,7 +3,7 @@
 		"target": "http://localhost:8001/",
 		"secure": false
 	},
-	"/api": {
+	"/api/*": {
 		"target": "http://localhost:8001/",
 		"secure": false,
 		"pathRewrite_disabled": {
