@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 from pykbdb.user import User
 from pykbdb.websession import WebSession
+from pykbdb.blob import Blob
 
 # Create an engine everyone can use.
 engine = create_engine('sqlite:///db.sqlite3', echo=True)
