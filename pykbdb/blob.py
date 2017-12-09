@@ -12,6 +12,7 @@ from pykbdb import Base
 class Blob(Base):
     __tablename__ = 'blobs'
     id = Column(String, primary_key=True)
+    tag_set = Column(String, unique=True)
     title = Column(String, index=True)
     content = Column(BLOB)
     owner = Column(String)
