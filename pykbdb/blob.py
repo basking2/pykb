@@ -24,13 +24,19 @@ class Blob(Base):
     expiration = Column(DateTime)
     tags = relationship("BlobTag", cascade="all, delete, delete-orphan")
 
+    def gettags(self):
+        '''Return a mapping of tags objects to a list of strings.'''
+        return (t.tag for t in self.tags)
+
     def addtag(self, tag):
+        '''Add a tag. This does not check for duplicates.'''
         if self.tags == None:
             self.tags = [ BlobTag(blobs_id = self.id, tag = tag) ]
         else:
             self.tags.append(BlobTag(blobs_id = self.id, tag = tag))
 
     def deltag(self, tag):
+        '''Delete all tags that match the given name.'''
         if self.tags != None:
             i = 0
             while i < len(self.tags):

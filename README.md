@@ -12,3 +12,8 @@ Python Knowledge Base app.
 or
 
     gunicorn pykb:app
+
+or
+
+    waitress-serve --port=8001 pykb:app
+    cd ui ; npm start
