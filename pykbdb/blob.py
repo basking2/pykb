@@ -19,10 +19,26 @@ class Blob(Base):
     content = Column(BLOB)
     owner = Column(String)
     contenttype = Column(String)
-
-    tags_id = Column(String, ForeignKey("tags.foreign_id"))
-    tags = relationship("Tag")
-
     creation = Column(DateTime)
     modification = Column(DateTime)
     expiration = Column(DateTime)
+    tags = relationship("BlobTag", cascade="all, delete, delete-orphan")
+
+    def addtag(self, tag):
+        if self.tags == None:
+            self.tags = [ BlobTag(blobs_id = self.id, tag = tag) ]
+        else:
+            self.tags.append(BlobTag(blobs_id = self.id, tag = tag))
+
+    def deltag(self, tag):
+        if self.tags != None:
+            i = 0
+            while i < len(self.tags):
+                if self.tags[i].tag == tag:
+                    del(self.tags[i])
+                i += 1
+
+class BlobTag(Base):
+    __tablename__ = 'blob_tags'
+    blobs_id = Column(String, ForeignKey('blobs.id'), primary_key = True, index = True)
+    tag = Column(String, primary_key = True, index = True)
