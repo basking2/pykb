@@ -5,6 +5,9 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import DateTime
 from sqlalchemy import BLOB
+from sqlalchemy import ForeignKey
+
+from sqlalchemy.orm import relationship
 
 from pykbdb import Base
 
@@ -12,11 +15,13 @@ from pykbdb import Base
 class Blob(Base):
     __tablename__ = 'blobs'
     id = Column(String, primary_key=True)
-    tag_set = Column(String, unique=True)
     title = Column(String, index=True)
     content = Column(BLOB)
     owner = Column(String)
     contenttype = Column(String)
+
+    tags_id = Column(String, ForeignKey("tags.foreign_id"))
+    tags = relationship("Tag")
 
     creation = Column(DateTime)
     modification = Column(DateTime)
