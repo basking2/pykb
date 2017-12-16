@@ -13,6 +13,7 @@ import { BlobComponent } from './blob/blob.component';
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
+  { path: 'blob/:id', component: BlobComponent },
   { path: 'blob', component: BlobComponent },
   { path: '', component: HomeComponent, pathMatch: 'full' },
 ];

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { HttpUrlEncodingCodec } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-blob',
@@ -12,19 +13,24 @@ export class BlobComponent implements OnInit {
 
   token: string = localStorage.getItem('bearer')
 
-  blobs = { 'blobs': [ ] }
+  blobs: object
+
+  id: string
 
   constructor(
     private http: HttpClient,
     private location: Location,
-  ) { }
+    private route: ActivatedRoute,
+  ) {
+    this.id = route.snapshot.paramMap.get('id')
+  }
 
   ngOnInit() {
     var auth = "bearer "+this.token;
 
     this.http.
       get('/api/blob', {'headers': {'Authorization': auth}}).
-      subscribe(data =>this.blobs = data )
+      subscribe(data => this.blobs = data )
   }
 
 }

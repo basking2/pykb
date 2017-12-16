@@ -2,7 +2,9 @@
   Blobs
 </h1>
 
+{{ id }}
+
 <p *ngFor="let b of blobs.blobs">
-  <span><a href="blobl/{{b.id}}">{{b.title}}</a></span>
+  <span><a href="blob/{{b.id}}">{{b.title}}</a></span>
   <span *ngFor="let t of b.tags">{{t}}</span>
 </p>
