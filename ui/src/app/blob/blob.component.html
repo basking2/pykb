@@ -1,5 +1,8 @@
-<p>
-  blob works!
-</p>
+<h1>
+  Blobs
+</h1>
 
-<p *ngFor="let b of blobs.blobs">{{b}}</p>
+<p *ngFor="let b of blobs.blobs">
+  <span><a href="blobl/{{b.id}}">{{b.title}}</a></span>
+  <span *ngFor="let t of b.tags">{{t}}</span>
+</p>

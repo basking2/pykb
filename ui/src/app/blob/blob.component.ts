@@ -12,7 +12,7 @@ export class BlobComponent implements OnInit {
 
   token: string = localStorage.getItem('bearer')
 
-  blobs = { 'blobs': [ 'a', 'b' ] }
+  blobs = { 'blobs': [ ] }
 
   constructor(
     private http: HttpClient,
@@ -20,10 +20,11 @@ export class BlobComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    var auth = "bearer "+this.token
+    var auth = "bearer "+this.token;
 
-    this.http.get('/api/blob', {'headers': {'Authorization': auth}}).subscribe(data =>{})
-
+    this.http.
+      get('/api/blob', {'headers': {'Authorization': auth}}).
+      subscribe(data =>this.blobs = data )
   }
 
 }
