@@ -13,7 +13,7 @@ export class BlobComponent implements OnInit {
 
   token: string = localStorage.getItem('bearer')
 
-  blobs: object
+  blobs: object = { 'blobs': [] }
 
   id: string
 

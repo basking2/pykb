@@ -2,7 +2,12 @@
   Blobs
 </h1>
 
-{{ id }}
+<h2>{{ id }}</h2>
+
+<form>
+  <input type="text" name="title" />
+  <input type="submit" name="submit" value="Create" />
+</form>
 
 <p *ngFor="let b of blobs.blobs">
   <span><a href="blob/{{b.id}}">{{b.title}}</a></span>
