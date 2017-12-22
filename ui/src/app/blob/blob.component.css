@@ -1,0 +1,10 @@
+textarea {
+  height: 3em;
+  width: 50%;
+  min-width: 20em;
+}
+
+input[type=text] {
+  width: 50%;
+  min-width: 20em;
+}

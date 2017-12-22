@@ -33,4 +33,9 @@ export class BlobComponent implements OnInit {
       subscribe(data => this.blobs = data )
   }
 
+  onSubmit(event, text) {
+    event.preventDefault()
+    console.info(text)
+  }
+
 }

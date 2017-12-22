@@ -5,8 +5,9 @@
 <h2>{{ id }}</h2>
 
 <form>
-  <input type="text" name="title" />
-  <input type="submit" name="submit" value="Create" />
+  <input #title type="text" name="title" (keydown.enter)="onSubmit($event, title.value)"/>
+  <br />
+  <textarea></textarea>
 </form>
 
 <p *ngFor="let b of blobs.blobs">
